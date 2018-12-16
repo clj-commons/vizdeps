@@ -4,9 +4,7 @@
     [clojure.java.io :as io]
     [dorothy.jvm :as d]
     [clojure.java.browse :refer [browse-url]]
-    [clojure.tools.cli :refer [parse-opts]]
-    [leiningen.core.classpath :as classpath]
-    [leiningen.core.main :as main])
+    [clojure.tools.cli :refer [parse-opts]])
   (:import (java.io File)))
 
 (defn gen-node-id
@@ -89,16 +87,13 @@
             ^File dot-file (io/file dot-path)]
         (spit dot-file dot)))
 
-    (main/debug "Create output diagram")
-
     (d/save! dot output-file {:format output-format})
 
     (when-not no-view
       (browse-url output-path)))
-
   nil)
 
-(defn ^:private build-dependency-map
+(defn build-dependency-map
   "Consumes a hierarchy and produces a map from artifact to version, used to identify
   which dependency linkages have had their version changed."
   ([hierarchy]
@@ -110,14 +105,6 @@
                     (build-dependency-map sub-hierarchy)))
               version-map
               hierarchy)))
-
-(defn flatten-dependencies
-  [project]
-  "Resolves dependencies for the project and returns a map from artifact
-  symbol to artifact coord vector."
-  (-> (classpath/managed-dependency-hierarchy :dependencies :managed-dependencies
-                                              project)
-      build-dependency-map))
 
 (defn matches-any
   "Creates a predicate that is true when the provided elem (string, symbol, keyword)

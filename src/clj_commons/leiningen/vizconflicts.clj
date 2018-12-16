@@ -1,4 +1,4 @@
-(ns clj-commons.vizconflicts
+(ns clj-commons.leiningen.vizconflicts
   "Graphviz visualization of conflicts in a multi-module project."
   (:require
     [com.walmartlabs.vizdeps.common :as common

@@ -1,8 +1,9 @@
-(ns clj-commons.vizdeps
+(ns clj-commons.leiningen.vizdeps
   "Graphviz visualization of project dependencies."
   (:require
     [com.walmartlabs.vizdeps.common :as common
      :refer [gen-node-id]]
+    [clj-commons.leiningen.common :as lein-common]
     [com.stuartsierra.dependency :as dep]
     [leiningen.core.main :as main]
     [dorothy.core :as d]

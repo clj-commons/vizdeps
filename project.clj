@@ -7,7 +7,9 @@
                  [org.clojure/tools.cli "0.4.1"]
                  [com.stuartsierra/dependency "0.2.0"]
                  [dorothy "0.0.7"]
-                 [medley "1.0.0"]
-                 [leiningen-core "2.8.2"]
-                 [org.apache.maven.wagon/wagon-http "3.0.0"]]
-  :aliases {"vizdeps" ["run" "-m" "clj-commons.vizdeps/leiningen"]})
+                 [medley "1.0.0"]]
+
+  :profiles {:leiningen {:dependencies [[leiningen-core "2.8.2"]
+                                        [org.apache.maven.wagon/wagon-http "3.0.0"]]}
+             :tools.deps {:dependencies [[org.clojure/tools.deps.alpha "0.5.460"]]}}
+  :aliases {"vizdeps" ["with-profile" "leiningen" "run" "-m" "clj-commons.leiningen.vizdeps/leiningen"]})
