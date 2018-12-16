@@ -1,4 +1,4 @@
-(ns leiningen.vizdeps
+(ns clj-commons.vizdeps
   "Graphviz visualization of project dependencies."
   (:require
     [com.walmartlabs.vizdeps.common :as common
@@ -6,9 +6,14 @@
     [com.stuartsierra.dependency :as dep]
     [leiningen.core.main :as main]
     [dorothy.core :as d]
+    [leiningen.core.user :as user]
     [leiningen.core.classpath :as classpath]
     [leiningen.core.project :as project]
-    [clojure.string :as str]))
+    [clojure.string :as str]
+    [cemerick.pomegranate.aether :as aether]
+    [clojure.java.io :as io]
+    [clojure.stacktrace :as stacktrace])
+  (:gen-class))
 
 (defn ^:private artifact->label
   [artifact]
@@ -29,13 +34,15 @@
       dependency
       (assoc dependency 0 (symbol (name artifact))))))
 
+(defonce crap-atom (atom nil))
+
 (defn ^:private immediate-dependencies
   [project dependency]
+  (reset! crap-atom [project dependency])
   (if (some? dependency)
-    (-> (#'classpath/get-dependencies-memoized
+    (-> (#'classpath/get-dependencies
           :dependencies nil
-          (assoc project :dependencies [dependency])
-          nil)
+          (assoc project :dependencies [dependency]))
         (get dependency)
         ;; Tracking dependencies on Clojure itself overwhelms the graph
         (as-> $
@@ -313,3 +320,56 @@
     (let [dot (build-dot project options)]
       (common/write-files-and-view dot options)
       (main/info "Wrote dependency chart to:" (:output-path options)))))
+
+
+
+(defn- insecure-http-abort [& _]
+  (let [repo (promise)]
+    (reify org.apache.maven.wagon.Wagon
+      (getRepository [this])
+      (setTimeout [this _])
+      (setInteractive [this _])
+      (addTransferListener [this _])
+      (^void connect [this
+                      ^org.apache.maven.wagon.repository.Repository the-repo
+                      ^org.apache.maven.wagon.authentication.AuthenticationInfo _
+                      ^org.apache.maven.wagon.proxy.ProxyInfoProvider _]
+       (deliver repo the-repo) nil)
+      (get [this resource _]
+        (main/abort "Tried to use insecure HTTP repository without TLS:\n"
+                    (str (.getId @repo) ": " (.getUrl @repo) "\n " resource) "\n"
+                    "\nThis is almost certainly a mistake; for details see"
+                    "\nhttps://github.com/technomancy/leiningen/blob/master/doc/FAQ.md")))))
+
+
+(defn- configure-http
+  "Set Java system properties controlling HTTP request behavior."
+  []
+  (System/setProperty "aether.connector.userAgent" (main/user-agent))
+  (when-let [{:keys [host port non-proxy-hosts]} (classpath/get-proxy-settings)]
+    (System/setProperty "http.proxyHost" host)
+    (System/setProperty "http.proxyPort" (str port))
+    (when non-proxy-hosts
+      (System/setProperty "http.nonProxyHosts" non-proxy-hosts)))
+  (when-let [{:keys [host port]} (classpath/get-proxy-settings "https_proxy")]
+    (System/setProperty "https.proxyHost" host)
+    (System/setProperty "https.proxyPort" (str port))))
+
+
+(defn leiningen
+  "Command-line entry point."
+  [& raw-args]
+  (try
+    (project/ensure-dynamic-classloader)
+    (aether/register-wagon-factory! "http" insecure-http-abort)
+    (let [project (if (.exists (io/file main/*cwd* "project.clj"))
+                    (project/read (str (io/file main/*cwd* "project.clj")))
+                    (throw (ex-info "Failed to find project" {})))]
+      (configure-http)
+      (vizdeps project raw-args))
+    (catch Exception e
+      (if (or main/*debug* (not (:exit-code (ex-data e))))
+        (stacktrace/print-cause-trace e)
+        (when-not (:suppress-msg (ex-data e))
+          (println (.getMessage e))))
+      (flush))))

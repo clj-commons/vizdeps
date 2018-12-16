@@ -2,7 +2,7 @@
   (:require
     [clojure.string :as str]
     [clojure.java.io :as io]
-    [dorothy.core :as d]
+    [dorothy.jvm :as d]
     [clojure.java.browse :refer [browse-url]]
     [clojure.tools.cli :refer [parse-opts]]
     [leiningen.core.classpath :as classpath]
