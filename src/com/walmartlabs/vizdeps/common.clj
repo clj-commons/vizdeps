@@ -391,16 +391,25 @@
                 :label (:version dep)))])))
 
 
-(defonce crap-atom (atom nil))
+(defonce build-dot-example-arguments
+  '{:dependency-map {dorothy [dorothy "0.0.7"],
+                     medley [medley "1.0.0"],
+                     com.stuartsierra/dependency [com.stuartsierra/dependency "0.2.0"],
+                     org.clojure/clojure [org.clojure/clojure "1.9.0"],
+                     org.clojure/core.specs.alpha [org.clojure/core.specs.alpha "0.1.24"],
+                     org.clojure/spec.alpha [org.clojure/spec.alpha "0.1.143"],
+                     org.clojure/tools.cli [org.clojure/tools.cli "0.4.1"]},
+    :root-dependencies ([org.clojure/clojure "1.9.0"]
+                        [org.clojure/tools.cli "0.4.1"]
+                        [com.stuartsierra/dependency "0.2.0"]
+                        [dorothy "0.0.7"]
+                        [medley "1.0.0"]),
+    :root-name clj-commons/vizdeps,
+    :root-version "0.1.7-SNAPSHOT"})
 
 
 (defn build-dot
   [get-deps-fn dependency-map root-name root-version root-dependencies options]
-  (reset! crap-atom {:dependency-map dependency-map
-                     :root-name root-name
-                     :root-version root-version
-                     :root-dependencies root-dependencies
-                     })
   (-> (build-dependency-graph get-deps-fn dependency-map root-name root-version root-dependencies options)
       (node-graph options)
       dorothy-core/digraph
