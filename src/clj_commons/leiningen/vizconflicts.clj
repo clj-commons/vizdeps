@@ -3,6 +3,7 @@
   (:require
     [com.walmartlabs.vizdeps.common :as common
      :refer [gen-node-id]]
+    [clj-commons.leiningen.common :as lein-common]
     [medley.core :refer [map-vals remove-vals filter-vals filter-keys]]
     [clojure.pprint :refer [pprint]]
     [leiningen.core.project :as project]
@@ -188,7 +189,7 @@
   (when-let [options (common/parse-cli-options "vizconflicts" cli-options args)]
     (let [projects (projects-map project options)
           dot (->> projects
-                   (map-vals common/flatten-dependencies)
+                   (map-vals lein-common/flatten-dependencies)
                    ;; Reduce the inner maps to symbol -> version number string
                    (map-vals #(map-vals second %))
                    (artifact-versions-map options)

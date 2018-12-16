@@ -1,0 +1,7 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.9.0"}
+        org.clojure/tools.cli {:mvn/version "0.4.1"}
+        com.stuartsierra/dependency {:mvn/version "0.2.0"}
+        dorothy {:mvn/version  "0.0.7"}
+        medley {:mvn/version  "1.0.0"}
+        org.clojure/tools.deps.alpha {:mvn/version "0.5.460"}}}
