@@ -1,4 +1,4 @@
-(defproject walmartlabs/vizdeps "0.1.7"
+(defproject walmartlabs/vizdeps "0.1.7-SNAPSHOT"
   :description "Visualize Leiningen project dependencies using Graphviz."
   :url "https://github.com/walmartlabs/vizdeps"
   :license {:name "Apache Sofware License 2.0"
