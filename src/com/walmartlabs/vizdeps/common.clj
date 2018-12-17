@@ -270,9 +270,10 @@
 (defn ^:private immediate-dependencies
   [dependency]
   (if (some? dependency)
-    (->> (*get-dependencies* dependency)
-         (remove #(= 'org.clojure/clojure (first %)))
-         vec)
+    (do
+      (->> (*get-dependencies* dependency)
+           (remove #(= 'org.clojure/clojure (first %)))
+           vec))
     []))
 
 
@@ -332,9 +333,29 @@
                            (immediate-dependencies resolved-dependency)))))
 
 
+(def example-get-deps-fn-call
+  {:argument '[org.clojure/clojure "1.9.0"]
+   :result #{'[org.clojure/core.specs.alpha "0.1.24"]
+             '[org.clojure/spec.alpha "0.1.143"]}})
+
+
+(defn filter-dependency-graph
+  [artifacts options]
+  (let [{:keys [prune highlight focus]} options]
+    (cond-> artifacts
+        prune
+      prune-artifacts
+
+      (seq focus)
+      (apply-focus focus)
+
+      (seq highlight)
+      (highlight-artifacts highlight))))
+
+
 (defn build-dependency-graph
   [get-deps-fn dependency-map root-name root-version root-dependencies options]
-  (let [{:keys [prune highlight focus]} options]
+  (let []
     (with-bindings {#'*get-dependencies* get-deps-fn}
       (-> (add-dependency-node {:artifacts {}
                                 :dependencies dependency-map}
@@ -345,15 +366,54 @@
           :artifacts
           ;; Ensure the root artifact is drawn properly and never pruned
           (assoc-in [root-name :root?] true)
-          (cond->
-              prune
-            prune-artifacts
+          (filter-dependency-graph options)))))
 
-            (seq focus)
-            (apply-focus focus)
 
-            (seq highlight)
-            (highlight-artifacts highlight))))))
+(def example-node-graph-artifacts
+  '{dorothy {:artifact-name dorothy, :deps [], :node-id "dorothy-10583", :version "0.0.7"},
+    medley {:artifact-name medley, :deps [], :node-id "medley-10584", :version "1.0.0"},
+    clj-commons/vizdeps {:artifact-name clj-commons/vizdeps,
+                         :deps [{:artifact-name org.clojure/clojure,
+                                 :conflict? false,
+                                 :version "1.9.0"}
+                                {:artifact-name org.clojure/tools.cli,
+                                 :conflict? false,
+                                 :version "0.4.1"}
+                                {:artifact-name com.stuartsierra/dependency,
+                                 :conflict? false,
+                                 :version "0.2.0"}
+                                {:artifact-name dorothy,
+                                 :conflict? false,
+                                 :version "0.0.7"}
+                                {:artifact-name medley, :conflict? false, :version "1.0.0"}],
+                         :node-id "vizdeps-10577",
+                         :root? true,
+                         :version "0.1.7-SNAPSHOT"},
+    com.stuartsierra/dependency {:artifact-name com.stuartsierra/dependency,
+                                 :deps [],
+                                 :node-id "dependency-10582",
+                                 :version "0.2.0"},
+    org.clojure/clojure {:artifact-name org.clojure/clojure,
+                         :deps [{:artifact-name org.clojure/core.specs.alpha,
+                                 :conflict? false,
+                                 :version "0.1.24"}
+                                {:artifact-name org.clojure/spec.alpha,
+                                 :conflict? false,
+                                 :version "0.1.143"}],
+                         :node-id "clojure-10578",
+                         :version "1.9.0"},
+    org.clojure/core.specs.alpha {:artifact-name org.clojure/core.specs.alpha,
+                                  :deps [],
+                                  :node-id "core.specs.alpha-10579",
+                                  :version "0.1.24"},
+    org.clojure/spec.alpha {:artifact-name org.clojure/spec.alpha,
+                            :deps [],
+                            :node-id "spec.alpha-10580",
+                            :version "0.1.143"},
+    org.clojure/tools.cli {:artifact-name org.clojure/tools.cli,
+                           :deps [],
+                           :node-id "tools.cli-10581",
+                           :version "0.4.1"}})
 
 
 (defn node-graph
