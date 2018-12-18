@@ -32,10 +32,9 @@
 (defn ^:private immediate-dependencies
   [project dependency]
   (if (some? dependency)
-    (-> (#'classpath/get-dependencies-memoized
+    (-> (#'classpath/get-dependencies
           :dependencies nil
-          (assoc project :dependencies [dependency])
-          nil)
+          (assoc project :dependencies [dependency]))
         (get dependency)
         ;; Tracking dependencies on Clojure itself overwhelms the graph
         (as-> $
