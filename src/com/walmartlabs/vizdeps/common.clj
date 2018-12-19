@@ -26,7 +26,7 @@
 
 (def cli-help ["-h" "--help" "This usage summary."])
 
-(def cli-save-dot ["-s" "--save-dot" "Save the generated GraphViz DOT file well as the output file."])
+(def cli-save-dot ["-s" "--save-dot" "Save the generated GraphViz DOT file as well as the output file."])
 
 (def cli-no-view
   ["-n" "--no-view" "If given, the image will not be opened after creation."
