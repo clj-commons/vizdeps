@@ -1,6 +1,6 @@
-# walmartlabs/vizdeps
+# clj-commons/lein-vizdeps
 
-[![Clojars Project](http://clojars.org/walmartlabs/vizdeps/latest-version.svg)](http://clojars.org/walmartlabs/vizdeps)
+[![Clojars Project](http://clojars.org/clj-commons/lein-vizdeps/latest-version.svg)](http://clojars.org/clj-commons/lein-vizdeps)
 
 An alternative to `lein deps :tree` that uses [Graphviz](http://graphviz.org) to present
 a dependency diagram of all the artifacts (Maven-speak for "libraries") in your project.
@@ -39,10 +39,10 @@ For example, `lein vizdeps --vertical --focus jackson-core`:
 
 ## Installation
 
-Put `[walmartlabs/vizdeps "0.1.7"]` into the `:plugins` vector of your `:user`
+Put `[clj-commons/lein-vizdeps "0.1.7"]` into the `:plugins` vector of your `:user`
 profile.
 
-The plugin makes use of the `dot` command,part of Graphviz,
+The plugin makes use of the `dot` command, part of Graphviz,
 which must be installed.
 On OS X, Graphviz can be installed using [Homebrew](https://brew.sh/):
 
@@ -63,7 +63,7 @@ Options:
   -n, --no-view                                      If given, the image will not be opened after creation.
   -o, --output-file FILE    target/dependencies.pdf  Output file path. Extension chooses format: pdf or png.
   -p, --prune                                        Exclude artifacts and dependencies that do not involve version conflicts.
-  -s, --save-dot                                     Save the generated GraphViz DOT file well as the output file.
+  -s, --save-dot                                     Save the generated GraphViz DOT file as well as the output file.
   -v, --vertical                                     Use a vertical, not horizontal, layout.
   -h, --help                                         This usage summary.
 ```
@@ -83,7 +83,7 @@ Options:
   -o, --output-file FILE  target/conflicts.pdf  Output file path. Extension chooses format: pdf or png.
   -X, --exclude NAME                            Exclude any project whose name matches the value. Repeatable.
   -a, --artifact NAME                           If given, then only artifacts whose name matches are included. Repeatable.
-  -s, --save-dot                                Save the generated GraphViz DOT file well as the output file.
+  -s, --save-dot                                Save the generated GraphViz DOT file as well as the output file.
   -n, --no-view                                 If given, the image will not be opened after creation.
   -h, --help                                    This usage summary.
 ```
