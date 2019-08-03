@@ -1,6 +1,8 @@
 # clj-commons/lein-vizdeps
 
-[![Clojars Project](http://clojars.org/clj-commons/lein-vizdeps/latest-version.svg)](http://clojars.org/clj-commons/lein-vizdeps)
+[![Clojars Project](https://img.shields.io/clojars/v/clj-commons/lein-vizdeps.svg)](https://clojars.org/clj-commons/lein-vizdeps)
+[![cljdoc badge](https://cljdoc.org/badge/clj-commons/lein-vizdeps)](https://cljdoc.org/d/clj-commons/lein-vizdeps)
+[![CircleCI](https://circleci.com/gh/clj-commons/lein-vizdeps.svg?style=svg)](https://circleci.com/gh/clj-commons/lein-vizdeps)
 
 An alternative to `lein deps :tree` that uses [Graphviz](http://graphviz.org) to present
 a dependency diagram of all the artifacts (Maven-speak for "libraries") in your project.
