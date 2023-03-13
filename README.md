@@ -78,6 +78,7 @@ The `--highlight` option can be repeated; any artifact that contains any of the 
 The `--focus` option allows you to mark some dependencies for inclusion; every artifact that does not match, or does not
 transitively depend on a marked artifact, is excluded.
 This is very useful when trying to work out how a specific artifact is transitively included.
+The value specified may be a regular expression.
 
 ## vizconflicts task
 

@@ -1,4 +1,4 @@
-(defproject clj-commons/lein-vizdeps "1.0"
+(defproject org.clj-commons/lein-vizdeps "1.0"
   :description "Visualize Leiningen project dependencies using Graphviz."
   :url "https://github.com/walmartlabs/vizdeps"
   :license {:name "Apache Sofware License 2.0"

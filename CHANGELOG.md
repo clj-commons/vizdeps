@@ -1,3 +1,9 @@
+## 1.0 -- 13 Mar 2023
+
+Updated dependencies, and allowed `--focus` to be a regular expression, rather than just a substring match.
+
+[Closed Issues](https://github.com/clj-commons/vizdeps/milestone/1?closed=1)
+
 ## 0.1.7 -- 8 Mar 2018
 
 Add missing `tools.cli` dependency
