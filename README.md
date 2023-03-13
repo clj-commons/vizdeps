@@ -44,7 +44,7 @@ or depend on such artifacts.
 
 ## Installation
 
-Put `[clj-commons/lein-vizdeps "0.1.7"]` into the `:plugins` vector of your `:user`
+Put `[clj-commons/lein-vizdeps "1.0"]` into the `:plugins` vector of your `:user`
 profile.
 
 The plugin makes use of the `dot` command, part of Graphviz,
