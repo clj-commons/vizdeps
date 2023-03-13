@@ -2,7 +2,6 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/clj-commons/lein-vizdeps.svg)](https://clojars.org/clj-commons/lein-vizdeps)
 [![cljdoc badge](https://cljdoc.org/badge/clj-commons/lein-vizdeps)](https://cljdoc.org/d/clj-commons/lein-vizdeps)
-[![CircleCI](https://circleci.com/gh/clj-commons/vizdeps.svg?style=svg)](https://circleci.com/gh/clj-commons/vizdeps)
 
 An alternative to `lein deps :tree` that uses [Graphviz](http://graphviz.org) to present
 a dependency diagram of all the artifacts (Maven-speak for "libraries") in your project.
@@ -33,11 +32,15 @@ transitively depend on an artifact with such a conflict:
 ![rook-purged](images/rook-pruned.png)
 
 Often, you are struck trying to track down why a specific artifact is included.
-In large projects, the Graphviz chart can become difficult to read.
+In large projects, the Graphviz chart will often be complex enough that Graphviz will
+have difficulty finding a workable layout.
 Use the `-f` / `--focus` option to limit which artifacts are shown.
 For example, `lein vizdeps --vertical --focus jackson-core`:
 
 ![rook-focused](images/rook-focus.png)
+
+This limits the rendered artifacts to just those that match the specified focus artifact,
+or depend on such artifacts.
 
 ## Installation
 
@@ -114,6 +117,6 @@ it is highlighted in blue (and other versions are drawn in red).
 
 ## License
 
-Copyright © 2016-2017 Walmartlabs
+Copyright © 2016-2023 Walmartlabs
 
 Distributed under the Apache Software License 2.0.
