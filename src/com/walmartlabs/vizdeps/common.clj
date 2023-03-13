@@ -121,8 +121,10 @@
 
 (defn matches-any
   "Creates a predicate that is true when the provided elem (string, symbol, keyword)
-  matches any of the provided string names."
-  [names]
-  (fn [elem]
-    (let [elem-name (name elem)]
-      (some #(str/includes? elem-name %) names))))
+  matches any of the provided string labels, each of which can be a regular expression
+  (string, re-pattern)"
+  [labels]
+  (let [patterns (map re-pattern labels)]
+    (fn [elem]
+      (let [elem-label (str elem)]
+        (some #(re-find % elem-label) patterns)))))
